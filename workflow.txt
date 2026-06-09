@@ -1,0 +1,81 @@
+======================================================================
+     AI-Based IoT Supply Chain Attack Detection System (BadBox Defense)
+                               PROJECT WORKFLOW
+======================================================================
+
+1. SYSTEM ARCHITECTURE
+----------------------------------------------------------------------
+The BadBox Defense system is divided into two primary subsystems:
+• Backend (Data Collection, ML Detection, API Services via Flask)
+• Frontend (Interactive Analytics & Control Dashboard via React + Vite)
+
+
+2. DATA INGESTION & NETWORK MONITORING (Backend)
+----------------------------------------------------------------------
+• Network Traffic Simulation Engine:
+  - Generates realistic IoT device network patterns simulating normal operations and 4 types of BadBox 2.0 attacks: C2 Beaconing, Data Exfiltration, Port Scans, and DDoS floods.
+• Data Extraction & Feature Engineering: 
+  - Network flow vectors are continuously mapped into 6 key dimensions: packet_size, protocol_code, src_port, dst_port, flow_duration, packets_per_second.
+
+
+3. AI THREAT DETECTION (Backend)
+----------------------------------------------------------------------
+• Machine Learning Model: An unsupervised Scikit-Learn Isolation Forest model pre-trained on IoT traffic profiles.
+• Anomaly Scoring: 
+  - The model computes a continuous "Threat Score" (0 to 100) based on multidimensional feature anomalies.
+• Classification Rules:
+  - Label: "Normal" (Score < 50), "Suspicious" (Score 50-74), "Malicious" (Score 75+)
+• Logging: All system activity and model inferences are securely logged with rotation via `logger.py` and outputted for live monitoring.
+
+
+4. ALERT GENERATION & MITIGATION (Backend)
+----------------------------------------------------------------------
+• Threat Classification Engine: Malicious packets natively spawn persistent Alert objects.
+• Device Impact Assessment: Monitored IoT devices transition from 'Safe' to 'Suspicious' to 'Compromised' based on aggressive network footprints.
+• Simulative Active Mitigation: The administrator can manually initiate a "Block IP" action on flagged perpetrators, rendering subsequent simulated adversarial payloads dropped and recorded. 
+
+
+5. API LAYER (Backend)
+----------------------------------------------------------------------
+• The Flask Server exposes RESTful endpoints for comprehensive frontend telemetry:
+    - GET /api/traffic: Generates and analyzes simulated live traffic flow.
+    - POST /api/detect: Interface for explicitly pinging the ML inference logic.
+    - GET /api/alerts: Fetches all active aggregated security alerts.
+    - GET /api/devices: Computes IoT device health statuses.
+    - GET /api/stats: Calculates holistic dashboard summary statistics.
+    - GET /api/logs: Exposes application-level stdout logs.
+    - POST /api/block-ip: Actionable simulated firewall patching to drop malicious sources.
+    - GET /api/blocked-ips: Retreives the active block-list.
+    - POST /api/train: Interface to trigger live ML model re-training.
+    - GET /api/health: Provides immediate system health checks.
+
+
+6. FRONTEND PRESENTATION & USER EXPERIENCE (React + Vite)
+----------------------------------------------------------------------
+• Premium UI Architecture: Built utilizing Tailwind CSS v4 to deliver a unified, premium, dark-themed cybersecurity aesthetic.
+• Advanced Motion & UX: Deep integration of Framer Motion for sophisticated, smooth layout animations across all tabs, complete with optimized skeleton loading states for asynchronous API data retrieval.
+• Live Polling Loop: The React app automatically synchronizes with backend telemetry via Axios, smoothly parsing and orchestrating React state natively to live Recharts visuals.
+• Navigation Modules:
+  - Dashboard: Macro-level key performance metrics, threat distribution charting, device health doughnuts, and latency tracking.
+  - Traffic Monitor: Granular scrolling live-table of raw HTTP/TCP/UDP vectors dynamically parsed via the AI detection grading protocol.
+  - Devices: Real-time status grid dynamically detailing the aggregated footprint and device safety categorization of node hardware like Routers or Smart Cams.
+  - Alerts: Specific heuristic-based attacker logs allowing admin intervention with rapid responsive "Block IP" resolution dispatching.
+  - Logs: A pristine, color-coded terminal viewport authentically replicating standard backend runtime tracking stdout.
+
+
+7. USER JOURNEY / OPERATION CYCLE
+----------------------------------------------------------------------
+STEP A: INITIALIZATION
+  - Administrator establishes the backend REST API environment via `python app.py` on default port 5000.
+  - Administrator launches the frontend dashboard UI via `npm run dev` on port 5173.
+
+STEP B: OBSERVATION
+  - User surveils the holistic system from the Dashboard, appreciating animated ingress metrics via the visually refined interface.
+  
+STEP C: INVESTIGATION
+  - Visual flags transition devices into Compromised states. Critical alerts appear specifying deterministic hostile IP behavior (e.g. Data Exfiltration from source IP).
+  - User investigates the detailed raw vector trace within the Traffic Monitor and Device contexts.
+
+STEP D: ACTIVE MITIGATION
+  - Responding to the alert, the User utilizes the "Block IP" function to immediately blacklist the rogue IP, visually and functionally stopping the inbound botnet activity.
+  - Continued monitoring evaluates system recovery, demonstrating robust IoT defense validation.
